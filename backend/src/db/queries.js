@@ -12,13 +12,15 @@ client.connect();
 
 let query = `SELECT * FROM buttons ORDER BY id ASC`;
 
-const getButtons = (req,res) => {
-    client.query(query, (err, results) => {
-        if(err) {
-          console.log(err)
-        }
-        res.status(200).json(results.rows)
-    })
+const getButtons = (req, res) => {
+  client.query(query, (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error getting buttons');
+    } else {
+      res.status(200).json(result.rows);
+    }
+  });
 }
 
 const createButtons = (req, res) => {
@@ -53,10 +55,15 @@ const deleteButton = (req, res) => {
 };
 
 const updateButtonClickCount = (req, res) => {
-  const id = parseInt(req.params.id);
-  const clickcount = req.body.clickcount;
+  const id = req.params.id;
+  const clickCount = req.body.clickcount;
   const query = 'UPDATE buttons SET clickcount = COALESCE($1, clickcount) WHERE id = $2';
-  const values = [clickcount, id];
+  const values = [clickCount, id];
+
+  if (!clickCount) {
+    res.status(400).send('Click count is missing in the request body');
+    return;
+  }
   client.query(query, values, (err, result) => {
     if (err) {
       console.error(err);
