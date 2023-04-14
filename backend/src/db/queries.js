@@ -25,16 +25,16 @@ const getButtons = (req, res) => {
 
 const createButtons = (req, res) => {
     const name = req.body.name;
-    const clickCount  = req.body.clickcount;
+    const clickcount  = req.body.clickcount;
     const query = 'INSERT INTO buttons (name, clickcount) VALUES ($1,$2)';
-    const values = [name, clickCount];
+    const values = [name, clickcount];
 
     client.query(query, values, (err, result) => {
         if (err) {
           console.error(err);
           res.status(500).send(err);
         } else {
-          res.status(201).send('Button created!');
+          res.status(201).json({ button: { id: result.insertId, name, clickcount } });
         }
       });
 }
