@@ -1,7 +1,8 @@
-import React, {useState, useEffect} from 'react'
+import  {useState, useEffect} from 'react'
 import axios from 'axios'
 import { Button, ChakraProvider } from '@chakra-ui/react'
 import {
+  Container,
   Flex,
   List,
   ListItem,
@@ -19,11 +20,9 @@ function App() {
   const [isNewButton, setIsNewButton] = useState<Boolean>(false)
   const [isLoading, setIsLoading] = useState<Boolean>(false);
 
-  console.log(isLoading)
 
   useEffect(() => {
     setIsLoading(true)
-    console.log("llamo de nuevo")
     axios.get<Button[]>('http://localhost:3000/buttons')
     .then(response =>{
       setButtons(response.data)
@@ -76,18 +75,20 @@ function App() {
 
   return (
     <ChakraProvider>
-      <Flex  margin={40} alignItems={'center'} justifyContent='center' flexDirection={'column'}>
-        <Button onClick={handleAddButton}>Agregar boton</Button>
-        {isLoading ? "Loading buttons... " : " "}
-        <List margin={10} display={'flex'} flexDirection={'column'} gap={5}>
-          {buttons.map((button, index) => (
-            <ListItem key={index} display={'flex'} flexDirection={'row'} gap={2} justifyContent={'center'} alignItems={'center'}>
-              <DefaultButton clickcount={button.clickcount} name={button.name} onClickCount={() => handleClickButton(button)} />
-              <Button border={'none'} color={'red'} background={'white'}  onClick={()=> handleDeleteButton(button)}>X</Button>
-            </ListItem>
-          ))}
-        </List>
-      </Flex>
+      <Container >
+        <Flex  margin={40} alignItems={'center'} justifyContent='center' flexDirection={'column'}>
+          <Button onClick={handleAddButton}>Agregar boton</Button>
+          {isLoading ? "Loading buttons... " : " "}
+          <List margin={10} display={'flex'} flexDirection={'column'} gap={5}>
+            {buttons.map((button, index) => (
+              <ListItem key={index} display={'flex'} flexDirection={'row'} gap={2} justifyContent={'center'} alignItems={'center'}>
+                <DefaultButton clickcount={button.clickcount} name={button.name} onClickCount={() => handleClickButton(button)} />
+                <Button border={'none'} color={'red'} background={'white'}  onClick={()=> handleDeleteButton(button)}>X</Button>
+              </ListItem>
+            ))}
+          </List>
+        </Flex>
+      </Container>
     </ChakraProvider>
   )
 }
